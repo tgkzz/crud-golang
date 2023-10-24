@@ -12,6 +12,7 @@ func NewServer(app *App) *http.ServeMux {
 	mux.HandleFunc("/", app.IndexHandler)
 	mux.HandleFunc("/create", app.CreateHandler)
 	mux.HandleFunc("/delete", app.DeleteHandler)
+	mux.HandleFunc("/read", app.ReadHandler)
 
 	return mux
 }

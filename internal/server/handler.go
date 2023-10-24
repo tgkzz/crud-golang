@@ -1,10 +1,23 @@
 package server
 
 import (
+	"crudapp/internal/database"
+	"crudapp/internal/models"
+	"database/sql"
 	"fmt"
 	"html/template"
+	"log"
 	"net/http"
 )
+
+type Err struct {
+	Text string
+	Code int
+}
+
+type App struct {
+	DB *sql.DB
+}
 
 func ErrorHandler(w http.ResponseWriter, code int) {
 	w.WriteHeader(code)
@@ -71,17 +84,16 @@ func (app *App) CreateHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		login := r.FormValue("login")
-		password := r.FormValue("password")
-		email := r.FormValue("email")
-		fullname := r.FormValue("fullname")
-		age := r.FormValue("age")
-		car := r.FormValue("car")
+		user := models.User{
+			Login:    r.FormValue("login"),
+			Password: r.FormValue("password"),
+			Email:    r.FormValue("email"),
+			Fullname: r.FormValue("fullname"),
+			Age:      r.FormValue("age"),
+			Car:      r.FormValue("car"),
+		}
 
-		query := `INSERT INTO users (login, password, email, fullname, age, car) VALUES ($1, $2, $3, $4, $5, $6)`
-
-		_, err = app.DB.Exec(query, login, password, email, fullname, age, car)
-		if err != nil {
+		if err := database.InsertToDB(app.DB, user); err != nil {
 			ErrorHandler(w, http.StatusInternalServerError)
 			return
 		}
@@ -129,11 +141,8 @@ func (app *App) DeleteHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		query := `DELETE FROM users WHERE login = $1 `
-		_, err = app.DB.Exec(query, login)
-		if err != nil {
+		if err = database.DeleteInDb(login, app.DB); err != nil {
 			ErrorHandler(w, http.StatusInternalServerError)
-			return
 		}
 
 		err = tmpl.Execute(w, nil)
@@ -144,5 +153,43 @@ func (app *App) DeleteHandler(w http.ResponseWriter, r *http.Request) {
 	default:
 		ErrorHandler(w, http.StatusMethodNotAllowed)
 		return
+	}
+}
+
+func (app *App) ReadHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "GET":
+		tmpl, err := template.ParseFiles("templates/html/read.html")
+		if err != nil {
+			ErrorHandler(w, http.StatusInternalServerError)
+			return
+		}
+
+		err = tmpl.Execute(w, nil)
+		if err != nil {
+			ErrorHandler(w, http.StatusInternalServerError)
+			return
+		}
+	case "POST":
+		login := r.FormValue("login")
+
+		user, err := database.ReadFromDb(app.DB, login)
+		if err != nil {
+			ErrorHandler(w, http.StatusInternalServerError)
+			return
+		}
+
+		tmpl, err := template.ParseFiles("templates/html/readAnswer.html")
+		if err != nil {
+			log.Print("here1")
+			ErrorHandler(w, http.StatusInternalServerError)
+			return
+		}
+
+		if err = tmpl.Execute(w, user); err != nil {
+			log.Print("here2")
+			ErrorHandler(w, http.StatusInternalServerError)
+			return
+		}
 	}
 }
