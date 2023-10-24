@@ -6,6 +6,7 @@ import (
 	"database/sql"
 	"fmt"
 	"html/template"
+	"log"
 	"net/http"
 )
 
@@ -198,5 +199,57 @@ func (app *App) ReadHandler(w http.ResponseWriter, r *http.Request) {
 			ErrorHandler(w, http.StatusInternalServerError)
 			return
 		}
+	default:
+		ErrorHandler(w, http.StatusMethodNotAllowed)
+		return
+	}
+}
+
+func (app *App) UpdateHandler(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/update" {
+		ErrorHandler(w, http.StatusNotFound)
+		return
+	}
+	switch r.Method {
+	case "GET":
+		tmpl, err := template.ParseFiles("templates/html/update.html")
+		if err != nil {
+			ErrorHandler(w, http.StatusInternalServerError)
+			return
+		}
+		if err = tmpl.Execute(w, nil); err != nil {
+			ErrorHandler(w, http.StatusInternalServerError)
+			return
+		}
+
+	case "POST":
+		login := r.FormValue("login")
+
+		fieldsToUpdate := map[string]string{
+			"password": r.FormValue("password"),
+			"email":    r.FormValue("email"),
+			"fullname": r.FormValue("fullname"),
+			"age":      r.FormValue("age"),
+			"car":      r.FormValue("car"),
+		}
+
+		if err := database.UpdateDb(app.DB, login, fieldsToUpdate); err != nil {
+			log.Print(err)
+			ErrorHandler(w, http.StatusInternalServerError)
+			return
+		}
+
+		tmpl, err := template.ParseFiles("templates/html/success.html")
+		if err != nil {
+			ErrorHandler(w, http.StatusInternalServerError)
+			return
+		}
+		if err = tmpl.Execute(w, nil); err != nil {
+			ErrorHandler(w, http.StatusInternalServerError)
+			return
+		}
+	default:
+		ErrorHandler(w, http.StatusMethodNotAllowed)
+		return
 	}
 }

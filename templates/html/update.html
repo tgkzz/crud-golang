@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Обновление данных пользователя</title>
+</head>
+
+<body>
+    <h2>Обновление данных пользователя</h2>
+    <form action="/update" method="POST">
+        
+        <div>
+            <label for="login">Логин (для идентификации):</label>
+            <input type="text" id="login" name="login" required>
+        </div>
+
+        <div>
+            <label for="password">Новый пароль (оставьте пустым, чтобы не менять):</label>
+            <input type="password" id="password" name="password">
+        </div>
+
+        <div>
+            <label for="email">Новый Email (оставьте пустым, чтобы не менять):</label>
+            <input type="email" id="email" name="email">
+        </div>
+
+        <div>
+            <label for="fullname">Новое полное имя (оставьте пустым, чтобы не менять):</label>
+            <input type="text" id="fullname" name="fullname">
+        </div>
+
+        <div>
+            <label for="age">Новый возраст (оставьте пустым, чтобы не менять):</label>
+            <input type="number" id="age" name="age" min="0">
+        </div>
+
+        <div>
+            <label for="car">Новая любимая машина (оставьте пустым, чтобы не менять):</label>
+            <input type="text" id="car" name="car">
+        </div>
+
+        <div>
+            <input type="submit" value="Обновить">
+        </div>
+    </form>
+</body>
+
+</html>
