@@ -42,7 +42,7 @@ server will be started on localhost:4000
 
 ## TODO
 
-- Implement handlers for read (done) and update
+- Implement handlers for read (done) and update (done)
 - ErrorHandling
 - Add [redis](https://redis.io/)
 - Transfer project to clean architecture
