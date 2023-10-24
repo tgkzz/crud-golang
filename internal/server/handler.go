@@ -6,7 +6,6 @@ import (
 	"database/sql"
 	"fmt"
 	"html/template"
-	"log"
 	"net/http"
 )
 
@@ -181,13 +180,11 @@ func (app *App) ReadHandler(w http.ResponseWriter, r *http.Request) {
 
 		tmpl, err := template.ParseFiles("templates/html/readAnswer.html")
 		if err != nil {
-			log.Print("here1")
 			ErrorHandler(w, http.StatusInternalServerError)
 			return
 		}
 
 		if err = tmpl.Execute(w, user); err != nil {
-			log.Print("here2")
 			ErrorHandler(w, http.StatusInternalServerError)
 			return
 		}
