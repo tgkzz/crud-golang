@@ -42,11 +42,14 @@ server will be started on localhost:4000
 
 ## TODO
 
-- Implement handlers for read and update
-- Change delete handler to work with any data from my db
+- Implement handlers for read (done) and update
 - ErrorHandling
 - Add [redis](https://redis.io/)
 - Transfer project to clean architecture
+
+## Important menthion
+
+as soon as i am not good programmer, in file [dbconn.go](https://github.com/tgkzz/crud-golang/blob/main/internal/database/dbconn.go), you need to change the path to your database, so it will work for your postgres database. Remember it, while executing this project
 
 ## Feedback
 
