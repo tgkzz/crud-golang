@@ -7,6 +7,10 @@ import (
 )
 
 func InsertToDB(db *sql.DB, user models.User) error {
+	if user == (models.User{}) {
+		return errors.New("empty struct came into input")
+	}
+
 	query := `INSERT INTO users (login, password, email, fullname, age, car) VALUES ($1, $2, $3, $4, $5, $6)`
 
 	_, err := db.Exec(query, user.Login, user.Password, user.Email, user.Fullname, user.Age, user.Car)

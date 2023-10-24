@@ -38,6 +38,11 @@ func ErrorHandler(w http.ResponseWriter, code int) {
 }
 
 func (app *App) IndexHandler(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/" {
+		ErrorHandler(w, http.StatusNotFound)
+		return
+	}
+
 	switch r.Method {
 	case "GET":
 		tmpl, err := template.ParseFiles("templates/html/index.html")
@@ -156,6 +161,11 @@ func (app *App) DeleteHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *App) ReadHandler(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/read" {
+		ErrorHandler(w, http.StatusNotFound)
+		return
+	}
+
 	switch r.Method {
 	case "GET":
 		tmpl, err := template.ParseFiles("templates/html/read.html")
